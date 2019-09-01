@@ -17,9 +17,13 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     
     let searchController = UISearchController(searchResultsController: nil)
     
+     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchController.searchBar.becomeFirstResponder()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpSearchBar()
         setUpTableView()
         
@@ -77,6 +81,14 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
         let podcast = self.podcasts[indexPath.row]
         cell.podcast = podcast
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let episodesController = EpisodesController()
+        let podcast = self.podcasts[indexPath.row]
+        episodesController.podcast = podcast
+        navigationController?.pushViewController(episodesController, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
