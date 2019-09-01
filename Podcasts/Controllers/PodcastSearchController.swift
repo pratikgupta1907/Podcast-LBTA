@@ -7,14 +7,10 @@
 //
 
 import UIKit
-import Alamofire
 
 class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     
-    var podcasts = [
-        Podcast(trackName: "Lets Build That App", artistName: "Brian Voong"),
-        Podcast(trackName: "Lets Build That App", artistName: "Brian Voong")
-    ]
+    var podcasts = [Podcast]()
     
     let cellId = "cellId"
     // lets implement a UISearchController
@@ -33,11 +29,16 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     
     fileprivate func setUpTableView() {
         //1. Register a cell for our tableView
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+       // tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        
+        tableView.tableFooterView = UIView()
+        let nib = UINib(nibName: "PodcastCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: cellId)
+        self.definesPresentationContext = true
+
     }
     
     fileprivate func setUpSearchBar() {
-        tableView.tableFooterView = UIView()
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.dimsBackgroundDuringPresentation = false
@@ -45,60 +46,41 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-       // print(searchText)
-        //implement Alamofire
-        
-        let url = "https://itunes.apple.com/search"
-        let parameters = ["term": searchText, "media": "podcast"]
-        
-        Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
-            if let err = dataResponse.error {
-                print("Failed to contact yahoo", err)
-                return
-            }
-            guard let data = dataResponse.data else { return }
-            
-            //   let dummyString = String(data: data, encoding: .utf8)
-            //  print(dummyString ?? "")
-            
-            do {
-                let searchResults = try JSONDecoder().decode(SearchResults.self, from: data)
-                
-                print("Result search count", searchResults.resultCount)
-                
-                searchResults.results.forEach({ (podcast) in
-                    print(podcast.artistName ?? "", podcast.trackName ?? "")
-                })
-                
-                self.podcasts = searchResults.results
-                self.tableView.reloadData()
-                
-            } catch let decodeErr {
-                print("failed to decode:", decodeErr)
-            }
+        APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
+            self.podcasts = podcasts
+            self.tableView.reloadData()
         }
-    }
-    
-    struct SearchResults: Decodable {
-        let resultCount: Int
-        let results: [Podcast]
+        
     }
     
     //MARK:- UITableView
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel()
+        label.text = "Please enter a search term."
+        label.textColor = .purple
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        return label
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return podcasts.count
     }
     
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return self.podcasts.count > 0 ? 0 : 250
+    }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PodcastCell
         
         let podcast = self.podcasts[indexPath.row]
-        cell.textLabel?.text = "\(podcast.trackName ?? "")\n\(podcast.artistName ?? "")"
-        cell.textLabel?.numberOfLines = -1
-        cell.imageView?.image = #imageLiteral(resourceName: "appicon")
+        cell.podcast = podcast
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 132
     }
     
 }
