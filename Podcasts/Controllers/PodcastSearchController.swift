@@ -34,7 +34,7 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     fileprivate func setUpTableView() {
         //1. Register a cell for our tableView
        // tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
-        
+        navigationController?.navigationBar.tintColor = .purple
         tableView.tableFooterView = UIView()
         let nib = UINib(nibName: "PodcastCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: cellId)
@@ -43,6 +43,11 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     }
     
     fileprivate func setUpSearchBar() {
+        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.purple], for: .normal)
+        
+       searchController.searchBar.tintColor = .purple
+       // UITextField.appearance(whenContainedInInstancesOf: [type(of: searchController.searchBar)]).tintColor = .purple
+
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.dimsBackgroundDuringPresentation = false
@@ -64,7 +69,7 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
         label.text = "Please enter a search term."
         label.textColor = .purple
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         return label
     }
     

@@ -90,8 +90,8 @@
 				7C1BD5DE2318D11B00B44E47 /* AppDelegate.swift */,
 				7C1BD5E02318D11B00B44E47 /* ViewController.swift */,
 				7C1BD5F02318D19500B44E47 /* MainTabBarController.swift */,
-				7C1BD5E22318D11B00B44E47 /* Main.storyboard */,
 				7C1BD5E52318D12200B44E47 /* Assets.xcassets */,
+				7C1BD5E22318D11B00B44E47 /* Main.storyboard */,
 				7C1BD5E72318D12200B44E47 /* LaunchScreen.storyboard */,
 				7C1BD5EA2318D12200B44E47 /* Info.plist */,
 			);
