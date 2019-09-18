@@ -7,24 +7,34 @@
 //
 
 import UIKit
+import SDWebImage
 
 class EpisodeCell: UITableViewCell {
-    
-    var episode: Episode! {
-        didSet {
-            titleLabel.text = episode.title
-            descriptionLabel.text = episode.description
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd MMM, yyyy"
-            pubDateLabel.text = dateFormatter.string(from: episode.pubDate)
-            
-        }
-    }
 
     @IBOutlet var episodeImageView: UIImageView!
     @IBOutlet var pubDateLabel: UILabel!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var titleLabel: UILabel! {
+        didSet {
+            titleLabel.numberOfLines = 2
+        }
+    }
+    @IBOutlet var descriptionLabel: UILabel! {
+        didSet {
+            descriptionLabel.numberOfLines = 2
+        }
+    }
     
+ var episode: Episode! {
+     didSet {
+        titleLabel.text = episode.title
+        descriptionLabel.text = episode.description
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM, yyyy"
+        pubDateLabel.text = dateFormatter.string(from: episode.pubDate)
+        
+        let url = URL(string: episode.imageUrl?.toSecureHTTPS() ?? "")
+        episodeImageView.sd_setImage(with: url, completed: nil)
+      }
+   }
 }

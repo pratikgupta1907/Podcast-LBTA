@@ -8,12 +8,32 @@
 
 import Foundation
 import Alamofire
+import FeedKit
 
 class APIService {
-    //singleton
     
     static let shared = APIService()
     
+    func fetchEpisodes(feedUrl: String, completionHandler: @escaping ([Episode]) -> ()) {
+        
+        let secureFeedUrl = feedUrl.contains("https") ? feedUrl : feedUrl.replacingOccurrences(of: "http", with: "https")
+        guard let url = URL(string: secureFeedUrl) else { return }
+        let parser = FeedParser(URL: url)
+        parser.parseAsync { (result) in
+            
+            
+            if let error = result.error {
+                print("failed to parse", error)
+                return
+            }
+            
+            guard let feed = result.rssFeed else { return }
+            
+            completionHandler(feed.toEpisode())
+
+        }
+        
+    }
     
     func fetchPodcasts(searchText: String, completionHandlr: @escaping ([Podcast]) -> ()) {
         
@@ -27,22 +47,9 @@ class APIService {
             }
             guard let data = dataResponse.data else { return }
             
-            //   let dummyString = String(data: data, encoding: .utf8)
-            //  print(dummyString ?? "")
-            
             do {
                 let searchResults = try JSONDecoder().decode(SearchResults.self, from: data)
-                
-//                print("Result search count", searchResults.resultCount)
-//
-//                searchResults.results.forEach({ (podcast) in
-//                    print(podcast.artistName ?? "", podcast.trackName ?? "")
-//                })
-                
                 completionHandlr(searchResults.results)
-                
-//                self.podcasts = searchResults.results
-//                self.tableView.reloadData()
                 
             } catch let decodeErr {
                 print("failed to decode:", decodeErr)

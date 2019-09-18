@@ -32,8 +32,6 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     //MARK:- SetUP Work
     
     fileprivate func setUpTableView() {
-        //1. Register a cell for our tableView
-       // tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         navigationController?.navigationBar.tintColor = .purple
         tableView.tableFooterView = UIView()
         let nib = UINib(nibName: "PodcastCell", bundle: nil)
@@ -46,8 +44,6 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.purple], for: .normal)
         
        searchController.searchBar.tintColor = .purple
-       // UITextField.appearance(whenContainedInInstancesOf: [type(of: searchController.searchBar)]).tintColor = .purple
-
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.dimsBackgroundDuringPresentation = false
@@ -57,9 +53,10 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
             self.podcasts = podcasts
-            self.tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
-        
     }
     
     //MARK:- UITableView

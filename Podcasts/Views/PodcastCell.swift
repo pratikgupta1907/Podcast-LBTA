@@ -24,9 +24,7 @@ class PodcastCell: UITableViewCell {
             
             guard let url = URL(string: podcast.artworkUrl600 ?? "") else { return }
         
-            podcastImageView.sd_setImage(with: url, completed: nil)
-            
-            
+            podcastImageView.sd_setImage(with: url, completed: nil)            
         }
     }
 }
