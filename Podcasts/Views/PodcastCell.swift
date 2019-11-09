@@ -11,7 +11,11 @@ import SDWebImage
 
 class PodcastCell: UITableViewCell {
     
-    @IBOutlet var podcastImageView: UIImageView!
+    @IBOutlet var podcastImageView: UIImageView! {
+        didSet {
+            podcastImageView.isSkeletonable = true
+        }
+    }
     @IBOutlet var trackNameLabel: UILabel!
     @IBOutlet var artistNameLabel: UILabel!
     @IBOutlet var episodeNameLabel: UILabel!

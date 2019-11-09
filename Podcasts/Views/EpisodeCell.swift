@@ -8,19 +8,26 @@
 
 import UIKit
 import SDWebImage
+import SkeletonView
 
 class EpisodeCell: UITableViewCell {
 
-    @IBOutlet var episodeImageView: UIImageView!
+    @IBOutlet var episodeImageView: UIImageView! {
+        didSet {
+            episodeImageView.isSkeletonable = true
+        }
+    }
     @IBOutlet var pubDateLabel: UILabel!
     @IBOutlet var titleLabel: UILabel! {
         didSet {
             titleLabel.numberOfLines = 2
+            titleLabel.isSkeletonable = true
         }
     }
     @IBOutlet var descriptionLabel: UILabel! {
         didSet {
             descriptionLabel.numberOfLines = 2
+            descriptionLabel.isSkeletonable = true
         }
     }
     
@@ -28,6 +35,7 @@ class EpisodeCell: UITableViewCell {
      didSet {
         titleLabel.text = episode.title
         descriptionLabel.text = episode.description
+        
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM, yyyy"

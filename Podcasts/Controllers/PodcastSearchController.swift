@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
     
@@ -27,6 +28,7 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
         setUpSearchBar()
         setUpTableView()
         
+        searchBar(searchController.searchBar, textDidChange: "voong")
     }
     
     //MARK:- SetUP Work
@@ -81,7 +83,9 @@ class PoadCastSearchController: UITableViewController, UISearchBarDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PodcastCell
         
         let podcast = self.podcasts[indexPath.row]
+        cell.showAnimatedGradientSkeleton()
         cell.podcast = podcast
+        cell.hideSkeleton()
         return cell
     }
     

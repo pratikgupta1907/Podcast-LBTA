@@ -9,5 +9,7 @@ target 'Podcasts' do
     pod "Alamofire"
     pod "SDWebImage"
     pod "FeedKit"
+    pod "SkeletonView"
+
 
 end

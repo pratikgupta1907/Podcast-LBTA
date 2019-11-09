@@ -8,6 +8,7 @@
 
 import UIKit
 import FeedKit
+import SkeletonView
 
 class EpisodesController: UITableViewController {
     
@@ -59,8 +60,22 @@ class EpisodesController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! EpisodeCell
         let episode = episodes[indexPath.row]
+        cell.showAnimatedSkeleton()
         cell.episode = episode
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let episode = self.episodes[indexPath.row]
+        
+        let window = UIApplication.shared.keyWindow
+        
+        let playerDetailsView = Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+        playerDetailsView.stopSkeletonAnimation()
+        playerDetailsView.episode = episode
+        
+        playerDetailsView.frame = self.view.frame
+        window?.addSubview(playerDetailsView)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
